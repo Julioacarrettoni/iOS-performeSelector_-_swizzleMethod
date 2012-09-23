@@ -10,13 +10,16 @@
 
 @interface ViewController : UIViewController
 {
-    IBOutlet UIButton *buttonA;
-    IBOutlet UIButton *buttonB;
     IBOutlet UISwitch *theSwitch;
     
     IBOutlet UIActivityIndicatorView *activityIndicator;
     
 }
-- (IBAction)onButtonATUI:(id)sender;
-- (IBAction)onButtonBTUI:(id)sender;
+
+- (IBAction)onExecuteTargetButtonTUI:(id)sender;
+
+- (IBAction)onCancelAllTogglesButtonTUI:(id)sender;
+- (IBAction)onCancelTogglesWithArgButtonTUI:(id)sender;
+- (IBAction)onCancelTogglesWithOutArgButtonTUI:(id)sender;
+
 @end

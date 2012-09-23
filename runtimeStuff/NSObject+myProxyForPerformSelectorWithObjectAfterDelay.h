@@ -11,5 +11,6 @@
 @interface NSObject (myProxyForPerformSelectorWithObjectAfterDelay_v3w4ef3wfed)
 
 + (void)cancelALLPreviousPerformRequestsWithSelector:(SEL) selector;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector;
 
 @end

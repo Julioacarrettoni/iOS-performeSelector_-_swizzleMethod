@@ -15,19 +15,24 @@ Just add to your project:
 * NSObject+myProxyForPerformSelectorWithObjectAfterDelay.m
 
 Finally, just import "NSObject+myProxyForPerformSelectorWithObjectAfterDelay.h" into whenever you want to use:
-$ + (void)cancelALLPreviousPerformRequestsWithSelector:(SEL) selector;
 
+```
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
++ (void)cancelALLPreviousPerformRequestsWithSelector:(SEL) selector; //For ALL targets
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector; //argument is not required
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument; //the normal one
+
+```
 And you are done!
-
 
 
 How does the example works?
 ===========================
 
-Is just a simple example, if you press the button on the left, a spiner will appear and then after 2 seconds the UISwitch will toggle.
-But if you press the second button before the 2 seconds, the toggle will not happend.
+Is just a simple example, if you press the top most button a spiner will appear and then after 2 seconds the UISwitch will toggle.
+But if you press the any of the other buttons before the 2 seconds, the toggle will not happend.
 
-Yes, the example is not magical as it would be really easy to hold a reference to the current ViewController, but I don't use it ;)
+Yes, the example is not magical as it would be really easy to hold a reference to the current ViewController, but Ii is just that, an example.
 
 Enjoy!
 

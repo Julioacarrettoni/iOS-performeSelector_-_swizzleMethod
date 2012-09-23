@@ -114,12 +114,75 @@ static NSMutableDictionary* delayedObjectsPerformingStuff = nil;
             {
                 NSObject* obj = [dic objectForKey:@"object"];
                 NSDictionary* arguments = [dic objectForKey:@"arguments"];
-                [NSObject cancelPreviousPerformRequestsWithTarget:obj selector:newSelector object:arguments];
+                [NSObject cancelPreviousPerformRequestsWithTarget_v3w4ef3wfed:obj selector:newSelector object:arguments];
             }
         }
     }
 }
 
++ (void)cancelPreviousPerformRequestsWithTarget_v3w4ef3wfed:(id)aTarget selector:(SEL)aSelector object:(id)anArgument
+{
+    @synchronized(delayedObjectsPerformingStuff)
+    {
+        NSString* selectorName = NSStringFromSelector(aSelector);
+        NSMutableSet* setOfPerformSelectors = [delayedObjectsPerformingStuff objectForKey:selectorName];
+        if (setOfPerformSelectors)
+        {
+            NSSet* set = [NSSet setWithSet:setOfPerformSelectors];
+            
+            NSString* newSelectorName = [NSString stringWithFormat:@"__alternative_sel_for_%@_v3w4ef3wfed:", selectorName];
+            SEL newSelector = NSSelectorFromString(newSelectorName);
+            
+            for (NSDictionary* dic in set)
+            {
+                NSObject* obj = [dic objectForKey:@"object"];
+                NSDictionary* arguments = [dic objectForKey:@"arguments"];
+                if (aTarget == obj && anArgument == [arguments objectForKey:ORIGINAL_ARGUMENT_KEY_v3w4ef3wfed])
+                {
+                    [NSObject cancelPreviousPerformRequestsWithTarget_v3w4ef3wfed:obj selector:newSelector object:arguments];
+                    [setOfPerformSelectors removeObject:dic];
+                }
+            }
+            
+            if (setOfPerformSelectors.count == 0)
+            {
+                [delayedObjectsPerformingStuff removeObjectForKey:selectorName];
+            }
+        }
+    }
+}
+
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector
+{
+    @synchronized(delayedObjectsPerformingStuff)
+    {
+        NSString* selectorName = NSStringFromSelector(aSelector);
+        NSMutableSet* setOfPerformSelectors = [delayedObjectsPerformingStuff objectForKey:selectorName];
+        if (setOfPerformSelectors)
+        {
+            NSSet* set = [NSSet setWithSet:setOfPerformSelectors];
+            
+            NSString* newSelectorName = [NSString stringWithFormat:@"__alternative_sel_for_%@_v3w4ef3wfed:", selectorName];
+            SEL newSelector = NSSelectorFromString(newSelectorName);
+            
+            for (NSDictionary* dic in set)
+            {
+                NSObject* obj = [dic objectForKey:@"object"];
+                if (aTarget == obj)
+                {
+                    NSDictionary* arguments = [dic objectForKey:@"arguments"];
+                    [NSObject cancelPreviousPerformRequestsWithTarget_v3w4ef3wfed:obj selector:newSelector object:arguments];
+                    [setOfPerformSelectors removeObject:dic];
+                }
+            }
+            
+            if (setOfPerformSelectors.count == 0)
+            {
+                [delayedObjectsPerformingStuff removeObjectForKey:selectorName];
+            }
+        }
+    }
+}
 
 static bool methodSwapped = NO;
 + (void) swapPerformSelectorWithObjectAfterDelayWithProxyMethod
@@ -131,6 +194,7 @@ static bool methodSwapped = NO;
             methodSwapped = YES;
             //With this we change the perform selector with delay with our own method :)
             [self jr_swizzleMethod:@selector(performSelector:withObject:afterDelay:) withMethod:@selector(performSelector_v3w4ef3wfed:withObject:afterDelay:) error:nil];
+            [self jr_swizzleClassMethod:@selector(cancelPreviousPerformRequestsWithTarget:selector:object:) withClassMethod:@selector(cancelPreviousPerformRequestsWithTarget_v3w4ef3wfed:selector:object:) error:nil];
         }
     }
 }

@@ -28,8 +28,6 @@
 }
 
 - (void)dealloc {
-    [buttonA release];
-    [buttonB release];
     [theSwitch release];
     [activityIndicator release];
     [super dealloc];
@@ -41,14 +39,23 @@
     activityIndicator.hidden = YES;
 }
 
-- (IBAction)onButtonATUI:(id)sender {
+- (IBAction)onExecuteTargetButtonTUI:(id)sender {
     [self performSelector:@selector(toggle) withObject:nil afterDelay:2.0];
     activityIndicator.hidden = NO;
 }
 
-- (IBAction)onButtonBTUI:(id)sender {
+- (IBAction)onCancelAllTogglesButtonTUI:(id)sender {
     [NSObject cancelALLPreviousPerformRequestsWithSelector:@selector(toggle)];
     activityIndicator.hidden = YES;
 }
 
+- (IBAction)onCancelTogglesWithArgButtonTUI:(id)sender {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(toggle) object:nil];
+    activityIndicator.hidden = YES;
+}
+
+- (IBAction)onCancelTogglesWithOutArgButtonTUI:(id)sender {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(toggle)];
+    activityIndicator.hidden = YES;
+}
 @end
